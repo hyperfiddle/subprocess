@@ -39,7 +39,8 @@
         opts (apply hash-map opts)
         verbose? (:verbose? opts)
         env (as-env-strings (:env opts))
-        proc (.. Runtime getRuntime (exec (into-array String cmd+args) env))
+        dir (some-> (:dir opts) (java.io.File.))
+        proc (.. Runtime getRuntime (exec (into-array String cmd+args) env dir))
         out (capture-stream (.getInputStream proc) verbose?)
         err (capture-stream (.getErrorStream proc) verbose?)
         proc-state (atom {:out out :err err :proc proc :exited? false})]
